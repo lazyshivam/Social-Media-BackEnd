@@ -72,7 +72,7 @@ function sendResetPasswordEmail(userEmail, token) {
       <p>Hi,</p>
       <p>You have requested to reset your password.</p>
       <p>To reset your password, click the following link and follow the instructions:</p>
-      <a href="${url}">Reset Your Password</a>
+      <a href="${url}" target="_blank">${url}</a>
       <p>If you did not request a password reset, please ignore this email or reply to let us know.</p>
       <p>This password reset is only valid for 30 minutes.</p>
       <p>Kind Regards</p>

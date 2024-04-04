@@ -6,6 +6,7 @@ const tokenService = require("./token.service");
 // const {emailVerificationToken}=require('../helpers/emailVerificationToken.js');
 const bcrypt = require("bcryptjs");
 const mailFunctions = require("../helpers/mailFunctions");
+const jwt = require('jsonwebtoken');
 
 
 
@@ -173,8 +174,14 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
 
     return { data: {}, code: CONSTANT.SUCCESSFUL, message: "Password updated successfully", };
   } catch (error) {
-    console.log(error)
-    return { data: {}, code: CONSTANT.UNAUTHORIZED, message: "Password reset failed", };
+    if (error instanceof jwt.TokenExpiredError) {
+      return { data: {}, code: CONSTANT.UNAUTHORIZED, message: "Reset token expired. Please request a new password reset link." };
+    } else if (error instanceof jwt.JsonWebTokenError) {
+      return { data: {}, code: CONSTANT.UNAUTHORIZED, message: "Invalid reset token. Please make sure you're using the correct link." };
+    } else {
+      console.error(error);
+      return { data: {}, code: CONSTANT.INTERNAL_SERVER_ERROR, message: "Internal server error. Please try again later." };
+    }
   }
 };
 

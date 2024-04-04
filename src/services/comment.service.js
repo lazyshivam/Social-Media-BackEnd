@@ -7,9 +7,13 @@ const { CommentModel } = require('../models');
  * @param {Object} commentData - Data for creating a new comment
  * @returns {Promise<Comment>} - Newly created comment
  */
-const createComment = async (commentData) => {
- 
-    const comment = await CommentModel.create(commentData);
+const createComment = async (commentData,postId,userId) => {
+    const commentDetails = {
+        ...commentData,
+        post: postId,
+        author:userId
+    }
+    const comment = await CommentModel.create(commentDetails);
     return {data: comment,code:CONSTANT.SUCCESSFUL,message:CONSTANT.COMMENT_CREATED};
 
 };

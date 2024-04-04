@@ -4,8 +4,10 @@ const { commentService } = require('../services');
 const CONSTANT = require('../config/constant');
 const { MailFunction } = require('../helpers');
 
-const createUserComment = catchAsync( async(req, res) => {
-    const result = await commentService.createComment(req.body);
+const createUserComment = catchAsync(async (req, res) => {
+    const userId = req.user.id;
+    const postId = req.params.postId;
+    const result = await commentService.createComment(req.body,postId,userId);
 
     res.send(result);
 });

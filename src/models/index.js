@@ -6,3 +6,5 @@ module.exports.UserModel = require('./user.model');
 
 module.exports.PostModel = require('./post.model');
 module.exports.CommentModel = require('./comment.model');
+module.exports.UserProfileModel = require('./profile.model');
+module.exports.StoryModel= require('./story.model');

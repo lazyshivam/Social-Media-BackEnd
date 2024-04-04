@@ -37,5 +37,21 @@ const getUserPostByID = catchAsync( async(req, res) => {
     res.send(result);
 });
 
+const getPostByPostID = catchAsync(async (req, res) => {
+    const postId = req.params.postId;
+    const result = await postService.getPostByPostId(postId);
 
-module.exports = { createUserPost, updateUserPost, deleteUserPost, getAllUserPost, getUserPostByID };
+    res.send(result);
+});
+
+const toggleLike = catchAsync(async (req, res) => {
+    const userId = req.user.id;
+    const postId = req.params.postId;
+    
+    const result = await postService.LikeAndDislikePost(userId, postId);
+
+    res.send(result);
+});
+
+
+module.exports = { createUserPost, updateUserPost, deleteUserPost, getAllUserPost, getUserPostByID,getPostByPostID,toggleLike };

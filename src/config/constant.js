@@ -49,19 +49,9 @@ module.exports = {
     DATA_NOT_FOUND: 'No record found',
     EMAIL_VERIFICATION:'Email verification link send',
 
-    // ticket constants
-    TICKET_RAISED: "Ticket raised successfully",
-    TICKET_UPDATED: "Ticket updated successfully",
-    TICKET_REPLY: "Ticket replied successfully",
-    TICKET_NOT_FOUND: "Ticket not found",
-    TICKET_LIST:"Ticket List",
-
+   
     
-    NO_SUBSCRIPTION: "Subscription not found",
-    CANCEL_SUBSCRIPTION: "Subscription canceled successfully",
-    BUY_SUBSCRIPTION: "Subscription bought successfully",
-    SUBSCRIPTION_LIST: "Subscription List",
-
+   
     
     // post related constants
     POST_CREATED: "Post created successfully",
@@ -69,6 +59,7 @@ module.exports = {
     POST_DELETED: 'Post deleted successfully',
     POST_LIST: "Post List",
     POST_DETAILS: "Post details",
+    POST_LIKED_MSG:"Post linked/dislike message",
     
 
     // comments related constants
@@ -79,5 +70,14 @@ module.exports = {
     COMMENT_DETAILS: "Comment details",
 
 
+    // User profile related constants
+    PROFILE_CREATED: 'Profile created successfully',
+    PROFILE_UPDATED: 'Profile updated successfully',
+    PROFILE_DETAILS:'Profile details',
+    
+    // constants for story
+
+    STORY_CREATED: "Story created successfully",
+    STORIES_FETCHED:"Story fetched successfully"
     
 }

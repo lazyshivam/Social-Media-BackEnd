@@ -12,9 +12,11 @@ router.get('/getAllUserPost', userAuth(),validate(postValidation.validateGetAllP
 // bellow routes for admin user 
 router.post('/updatePost/:postId',userAuth(),validate(postValidation.validateUpdatePost), postController.updateUserPost);
 router.get('/getUserPost', userAuth(),validate(postValidation.validateGetPost), postController.getUserPostByID);
+router.get('/getPostDetails/:postId',userAuth(),validate(postValidation.validateDeletePost), postController.getPostByPostID);
 
 
 router.post('/deletePost/:postId',userAuth(),validate(postValidation.validateDeletePost), postController.deleteUserPost); //this route is accessible for admin users ans normal users as well
+router.post('/toggleLike/:postId',userAuth(),validate(postValidation.validateDeletePost), postController.toggleLike); //this route is accessible for admin users ans normal users as well
 
 
 module.exports = router;
