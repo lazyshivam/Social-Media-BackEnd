@@ -16,6 +16,8 @@ const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 // const ApiError = require('./utils/ApiError');
 // const path = require('path');
+const bodyParser = require('body-parser');
+
 
 const app = express();
 
@@ -27,11 +29,15 @@ if (config.env !== 'test') {
 // set security HTTP headers
 app.use(helmet());
 
-// parse json request body
-app.use(express.json());
+// // parse json request body
+// app.use(express.json());
 
-// parse urlencoded request body
-app.use(express.urlencoded({ extended: true }));
+// // parse urlencoded request body
+// app.use(express.urlencoded({ extended: true }));
+
+// Increase request body size limit (e.g., 10MB)
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 // sanitize request data
 app.use(xss());
