@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema({
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'UserProfile'
     },
     likes: {
         type: Number,
@@ -18,10 +18,10 @@ const postSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
-    comments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment',
-    }],
+    commentCount: {
+        type: Number,
+        default: 0
+    },
     image: {
         type: String,
     },

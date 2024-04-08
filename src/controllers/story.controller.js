@@ -11,6 +11,12 @@ const createUserStory = catchAsync(async (req, res) => {
     res.send(result);
 });
 
+const getStory = catchAsync(async (req, res) => {
+    const userId = req.user.id;
+    const result = await storyService.getUserStory(userId);
+
+    res.send(result);
+});
 
 const getAllUserStory = catchAsync(async (req, res) => {
     const userId = req.user.id;
@@ -20,4 +26,4 @@ const getAllUserStory = catchAsync(async (req, res) => {
 });
 
 
-module.exports = { createUserStory,getAllUserStory };
+module.exports = { createUserStory,getAllUserStory ,getStory};

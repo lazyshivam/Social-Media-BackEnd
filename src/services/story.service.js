@@ -7,28 +7,42 @@ const { StoryModel, UserProfileModel } = require('../models');
  * @param {Object} storyData - Data for creating a new story
  * @returns {Promise<Story>} - Newly created story
  */
-const createStory = async (storyData,userId) => {
+const createStory = async (storyData, userId) => {
+    const profile = await UserProfileModel.findOne({ user: userId });
+    if (!profile) {
+        return {data: {},code:CONSTANT.BAD_REQUEST,message:"User profile does not exist"};
+    }
         const updateDetails = {
             ...storyData,
-            user:userId
+            author:profile._id
          }
         const story = await StoryModel.create(updateDetails);
         return { data: story, code: CONSTANT.SUCCESSFUL, message: CONSTANT.STORY_CREATED };
 };
 
+const getUserStory = async (userId) => {
+    const profile = await UserProfileModel.findOne({ user: userId });
+    if (!profile) {
+        return {data: {},code:CONSTANT.BAD_REQUEST,message:"User profile does not exist"};
+    }
+    const allStory=await StoryModel.find({author:profile._id}).populate('author');
+
+        return { data: allStory, code: CONSTANT.SUCCESSFUL, message:"Story List" };
+};
+
 
 
 /**
- * Get stories created by followed users
+ * Get stories created by followed user
  * @param {string} userId - User ID of the viewer
  * @returns {Promise<Story[]>} - Array of stories
  */
 const getStoriesByFollowedUsers = async (userId) => {
    
         const followedUsers = await getFollowedUsers(userId);
-       
+         console.log(followedUsers)
         // Find stories created by followed users
-        const stories = await StoryModel.find({ user: { $in: followedUsers } }).sort({ createdAt: -1 });
+        const stories = await StoryModel.find({ author: { $in: followedUsers } }).sort({ createdAt: -1 }).populate('author');
 
         return { data: stories, code: CONSTANT.SUCCESSFUL, message: CONSTANT.STORIES_FETCHED };
 
@@ -49,5 +63,6 @@ const getFollowedUsers = async (userId) => {
 
 module.exports = {
     createStory,
-    getStoriesByFollowedUsers
+    getStoriesByFollowedUsers,
+    getUserStory
 };

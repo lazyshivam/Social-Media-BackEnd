@@ -34,12 +34,16 @@ const userProfileSchema = new mongoose.Schema({
     },
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'UserProfile'
     }],
     following: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }]
+        ref: 'UserProfile'
+    }],
+    postLiked: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post'
+    }],
 });
 
 

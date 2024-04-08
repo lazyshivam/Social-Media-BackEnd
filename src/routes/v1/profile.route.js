@@ -11,8 +11,7 @@ router.get('/getProfile', userAuth(), profileController.getUserProfileById);
 
 // bellow routes for admin user 
 router.post('/updateProfile', userAuth(), validate(profileValidation.validateUpdateProfile), profileController.updateUserProfile);
-router.post('/followUser/:userId',userAuth(),validate(profileValidation.validateFollowUnFollow), profileController.follow);
-router.post('/unfollowUser/:userId',userAuth(),validate(profileValidation.validateFollowUnFollow), profileController.unfollow);
+router.post('/followUser/:userId',userAuth(),validate(profileValidation.validateFollowUnFollow), profileController.toggleFollowAndUnfollow);
 
 
 

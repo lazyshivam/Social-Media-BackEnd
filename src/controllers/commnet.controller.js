@@ -16,7 +16,7 @@ const createUserComment = catchAsync(async (req, res) => {
 
 const deleteUserComment = catchAsync(async (req, res) => {
     const commentId=req.params.commentId;
-    const result = await commentService.deleteUserComment(commentId);
+    const result = await commentService.deleteCommentById(commentId);
 
     res.send(result);
 });
@@ -35,6 +35,11 @@ const getCommentForPostById = catchAsync(async (req, res) => {
 
     res.send(result);
 });
+const getAllUserComment = catchAsync(async (req, res) => {
+    const result = await commentService.getAllComment();
+
+    res.send(result);
+});
 
 
-module.exports = { createUserComment,updateUserCommentById,deleteUserComment,getCommentForPostById };
+module.exports = { createUserComment,updateUserCommentById,deleteUserComment,getCommentForPostById,getAllUserComment };

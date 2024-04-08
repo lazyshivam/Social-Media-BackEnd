@@ -63,7 +63,7 @@ const updateProfile = async (profileData, userId) => {
  * @returns {Promise<Post[]>} - Array of posts
  */
 const getUserProfile = async (userId) => {
-    const profile = await UserProfileModel.findOne({ user: userId });
+    const profile = await UserProfileModel.findOne({ user: userId }).populate('following');
     
     if (!profile) {
         return {data:{},code:CONSTANT.BAD_REQUEST,message: CONSTANT.NOT_FOUND_MSG}
@@ -74,89 +74,67 @@ const getUserProfile = async (userId) => {
 
 
 /**
- * Follow a user
- * @param {string} userId - User ID of the user to follow
+ * Follow or unfollow a user
+ * @param {string} userId - User ID of the user to follow/unfollow
  * @param {string} followerId - User ID of the follower
  * @returns {Promise<void>}
  */
-const followUser = async (userId, followerId) => {
+const toggleFollow = async (ToFollow, followerId) => {
+    console.log(`User ${followerId} is toggling follow/unfollow for user ${ToFollow}`);
 
-        console.log(`User ${followerId} is following user ${userId}`);
+    // Find the user
+    const user = await UserProfileModel.findOne({user:ToFollow});
+    if (!user) {
+        return { data: {}, code: CONSTANT.BAD_REQUEST, message: CONSTANT.NOT_FOUND_MSG };
+    }
 
-        // Find the user to follow
-        const userToFollow = await UserProfileModel.findOne({user:userId});
-        if (!userToFollow) {
-          return {data:{},code:CONSTANT.BAD_REQUEST,message:CONSTANT.NOT_FOUND_MSG}
-        }
+    // Find the follower's profile
+    const followerProfile = await UserProfileModel.findOne({ user: followerId });
+    if (!followerProfile) {
+        return { data: {}, code: CONSTANT.BAD_REQUEST, message: CONSTANT.NOT_FOUND_MSG };
+    }
 
-        // Find the follower's profile
-        const followerProfile = await UserProfileModel.findOne({ user: followerId });
-        if (!followerProfile) {
-            return {data:{},code:CONSTANT.BAD_REQUEST,message:CONSTANT.NOT_FOUND_MSG}
-        }
-
-        // Check if the follower is already following the user
-        if (!followerProfile.following.includes(userId)) {
-            // Add the user to the follower's following list
-            followerProfile.following.push(userId);
-            await followerProfile.save();
-
-            // Increment the following count of the follower
-            followerProfile.followingCount++;
-        }
-
-        // Add the follower to the user's follower list
-        userToFollow.followers.push(followerId);
-        await userToFollow.save();
-
-        // Increment the follower count of the user
-        userToFollow.followerCount++;
-
-        // Return success response
-        return {data:{}, code: CONSTANT.SUCCESSFUL, message: `User ${followerId} is now following user ${userId}` };
-};
-
-/**
- * Unfollow a user
- * @param {string} userId - User ID of the user to unfollow
- * @param {string} followerId - User ID of the follower
- * @returns {Promise<void>}
- */
-const unfollowUser = async (userId, followerId) => {
-        console.log(`User ${followerId} is unfollowing user ${userId}`);
-
-        // Find the user to unfollow
-        const userToUnfollow = await UserProfileModel.findById(userId);
-        if (!userToUnfollow) {
-            return {data:{},code:CONSTANT.BAD_REQUEST,message:CONSTANT.NOT_FOUND_MSG}
-        }
-
-
-
-      // Find the follower's profile
-      const followerProfile = await UserProfileModel.findOne({ user: followerId });
-      if (!followerProfile) {
-          return {data:{},code:CONSTANT.BAD_REQUEST,message:CONSTANT.NOT_FOUND_MSG}
-      }
+    if (followerProfile.following.includes(user._id)) {
+        // Unfollow the user
 
         // Remove the user from the follower's following list
-        followerProfile.following.pull(userId);
-        await followerProfile.save();
-
+        followerProfile.following.pull(user._id);
+        
         // Decrement the following count of the follower
         followerProfile.followingCount--;
-
+        
         // Remove the follower from the user's follower list
-        userToUnfollow.followers.pull(followerId);
-        await userToUnfollow.save();
-
+        user.followers.pull(followerProfile._id);
+        
         // Decrement the follower count of the user
-        userToUnfollow.followerCount--;
-
+        user.followerCount--;
+        
+        await followerProfile.save();
+        await user.save();
         // Return success response
-        return {data:{}, code: CONSTANT.SUCCESSFUL, message: `User ${followerId} is no longer following user ${userId}` };
+        return { data:user, code: CONSTANT.SUCCESSFUL, message: `User ${followerId} is no longer following user ${ToFollow}` };
+    } else {
+        // Follow the user
 
+        // Add the user to the follower's following list
+        followerProfile.following.push(user._id);
+        
+        // Increment the following count of the follower
+        followerProfile.followingCount++;
+        
+        // Add the follower to the user's follower list
+        user.followers.push(followerProfile._id);
+        
+        // Increment the follower count of the user
+        user.followerCount++;
+        
+        await followerProfile.save();
+        await user.save();
+        // Return success response
+        return { data:user, code: CONSTANT.SUCCESSFUL, message: `User ${followerId} is now following user ${ToFollow}` };
+    }
 };
+
 
 
 
@@ -164,6 +142,5 @@ module.exports = {
     createProfile,
     updateProfile,
     getUserProfile,
-    followUser,
-    unfollowUser,
+   toggleFollow
 };

@@ -32,16 +32,9 @@ const getUserProfileById = catchAsync( async(req, res) => {
     res.send(result);
 });
 
-const follow = catchAsync(async (req, res) => {
-    const userId=req.params.userId
-    const result = await profileService.followUser(userId,req.user.id);
-
-    res.send(result);
-});
-
-const unfollow = catchAsync(async (req, res) => {
-    const userId=req.params.userId
-    const result = await profileService.getUserProfile(userId,req.user.id);
+const toggleFollowAndUnfollow = catchAsync(async (req, res) => {
+    const userToFollow=req.params.userId
+    const result = await profileService.toggleFollow(userToFollow,req.user.id);
 
     res.send(result);
 });
@@ -49,4 +42,5 @@ const unfollow = catchAsync(async (req, res) => {
 
 
 
-module.exports = { createUserProfile,updateUserProfile,getUserProfileById,follow,unfollow };
+
+module.exports = { createUserProfile,updateUserProfile,getUserProfileById,toggleFollowAndUnfollow };
